@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Udemy_Api.DataAccess;
+using Udemy_Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApiContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("conn"));
+    
 });
+
+builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 

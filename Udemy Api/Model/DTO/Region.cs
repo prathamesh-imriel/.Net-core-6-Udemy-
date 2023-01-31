@@ -1,4 +1,4 @@
-﻿namespace Udemy_Api.Model
+﻿namespace Udemy_Api.Model.DTO
 {
     public class Region
     {
@@ -13,8 +13,5 @@
         public double Long { get; set; }
 
         public long Population { get; set; }
-
-        //Navigation
-        public IEnumerable<Walk> Walks { get; set; }
     }
 }

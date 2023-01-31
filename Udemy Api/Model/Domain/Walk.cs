@@ -1,4 +1,4 @@
-﻿namespace Udemy_Api.Model
+﻿namespace Udemy_Api.Model.Domain
 {
     public class Walk
     {
@@ -7,7 +7,7 @@
         public Guid WalkDifficultyId { get; set; }
         public Guid RegionId { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public double Length { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Udemy_Api.Model;
+using Udemy_Api.Model.Domain;
 
 namespace Udemy_Api.DataAccess
 {
