@@ -74,10 +74,10 @@ namespace Udemy_Api.Controllers
         {
             var result = await regionRepository.GetRegionByIdAsync(id);
 
-            var resultDTO = mapper.Map<Region>(result);
             if (result == null)
                 return NotFound();
-            
+
+            var resultDTO = mapper.Map<Region>(result);            
             return Ok(resultDTO);
 
         }
@@ -121,4 +121,3 @@ namespace Udemy_Api.Controllers
 }
 
 
-//0bb799de - 2831 - 475e-959f - 08db041e1a63

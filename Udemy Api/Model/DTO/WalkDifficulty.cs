@@ -1,0 +1,9 @@
+﻿namespace Udemy_Api.Model.DTO
+{
+    public class WalkDifficulty
+    {
+        public Guid Id { get; set; }
+
+        public string? Level { get; set; }
+    }
+}
