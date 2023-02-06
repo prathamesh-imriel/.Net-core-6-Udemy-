@@ -1,6 +1,8 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Udemy_Api.Model.Domain;
+using Udemy_Api.Model.DTO;
+using Region = Udemy_Api.Model.Domain.Region;
 
 namespace Udemy_Api.DataAccess
 {
@@ -14,7 +16,7 @@ namespace Udemy_Api.DataAccess
         }
 
         public DbSet<Region> Regions { get; set; }
-        public DbSet<Walk> Walks { get; set; }
-        public DbSet<WalkDifficulty> WalkDifficulty { get; set; }
+        public DbSet<Model.Domain.Walk> Walks { get; set; }
+        public DbSet<Model.Domain.WalkDifficulty> WalkDifficulty { get; set; }
     }
 }

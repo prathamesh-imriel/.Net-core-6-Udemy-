@@ -1,4 +1,6 @@
-﻿namespace Udemy_Api.Model.Domain
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Udemy_Api.Model.Domain
 {
     public class Region
     {
@@ -6,6 +8,7 @@
         public Guid Id { get; set; }
 
         public string? Code { get; set; }
+
         public string? Name { get; set; }
 
         public double Area { get; set; }

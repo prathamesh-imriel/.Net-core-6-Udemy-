@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
@@ -20,6 +21,7 @@ namespace Udemy_Api.Controllers
             this.mapper = mapper;
         }
         [HttpGet]
+        [Authorize(Roles ="reader")]
         public async Task<IActionResult> GetAllWalksAsync()
         {
             var result = await walkRepository.GetWalkAsync();
@@ -36,6 +38,8 @@ namespace Udemy_Api.Controllers
 
         [HttpGet]
         [Route("{Id:guid}")]
+        [Authorize(Roles = "reader")]
+
         public async Task<IActionResult> GetWalkByIdAsync(Guid Id)
         {
             var result = await walkRepository.GetWalkByIdAsync(Id);
@@ -50,6 +54,8 @@ namespace Udemy_Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
+
         public async Task<IActionResult> AddNewWalkAsync(Model.DTO.AddWalkRequest walkRequest)
         {
             var res = await walkRepository.AddWalkAsync(walkRequest);
@@ -61,6 +67,8 @@ namespace Udemy_Api.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "writer")]
+
         public async Task<IActionResult> UpdateWalkInfoAsync(Guid id , Model.DTO.AddWalkRequest request)
         {
             var res = await walkRepository.UpdateWalkAsync(id, request);
@@ -70,6 +78,8 @@ namespace Udemy_Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "writer")]
+
         public async Task<IActionResult> DeleteWalk(Guid id)
         {
             var res = await walkRepository.DeleteWalk(id);

@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Udemy_Api.Model;
-using System.Net;
 using Udemy_Api.Model.DTO;
 using Udemy_Api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Udemy_Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+
     public class RegionsController : Controller
     {
         public readonly IRegionRepository regionRepository;
@@ -22,46 +22,11 @@ namespace Udemy_Api.Controllers
 
 
         [HttpGet]
+        //[Authorize(Roles = "reader")]
         public async Task<IActionResult> GetAllRegions()
         {
 
-
-            /*
-             
-             var regions = new List<Region>(){
-                new Region() {Id=Guid.NewGuid(),Name="Wellington",Code="WEL"},
-                new Region() {Id=Guid.NewGuid(),Name="Pune",Code = "PUN"},
-                new Region() {Id=Guid.NewGuid(),Name="Mumbai",Code = "MUM"}
-            };
-
-             */
-
-
-
             var allRegions = await regionRepository.GetRegionsAsync();
-
-
-            /*
-
-                var regionsDTO = new List<DTO.Region>();
-
-                allRegions.ToList().ForEach(region =>
-                {
-                    var regionDTO = new DTO.Region()
-                    {
-                        Id = region.Id,
-                        Name = region.Name,
-                        Code = region.Code,
-                        Area = region.Area,
-                        Lat = region.Lat,
-                        Long= region.Long,
-                        Population = region.Population
-                    };
-
-                    regionsDTO.Add(regionDTO);
-                });
-
-             */
 
             var regionsDTO = mapper.Map<List<Region>>(allRegions);
             return Ok(regionsDTO);
@@ -70,6 +35,7 @@ namespace Udemy_Api.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
+        //[Authorize(Roles = "writer")]
         public async Task<IActionResult> GetRegionByIdAsync(Guid id)
         {
             var result = await regionRepository.GetRegionByIdAsync(id);
@@ -77,30 +43,41 @@ namespace Udemy_Api.Controllers
             if (result == null)
                 return NotFound();
 
-            var resultDTO = mapper.Map<Region>(result);            
+            var resultDTO = mapper.Map<Region>(result);
             return Ok(resultDTO);
 
         }
 
         [HttpPost]
+        [Authorize(Roles = "writer")]
+
         public async Task<IActionResult> AddNewRegionAsync(Model.DTO.AddRegionRequest region)
         {
+
+            //var isValid = ValidateAddRegionRequest(region);
+
+            //if (!isValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
             var result = await regionRepository.AddNewRegionAsync(region);
 
             var resultDTO = mapper.Map<Region>(result);
-            
 
-            if(resultDTO!=null)
+
+            if (resultDTO != null)
                 return Ok(resultDTO);
             return BadRequest();
         }
 
 
         [HttpDelete]
+        [Authorize(Roles = "writer")]
         public async Task<IActionResult> DeleteRegion(Guid id)
         {
             var res = await regionRepository.DeleteRegionAsync(id);
-            var resultDTO = mapper.Map<Region>(res);    
+            var resultDTO = mapper.Map<Region>(res);
             if (res != null)
                 return Ok(resultDTO);
 
@@ -108,16 +85,80 @@ namespace Udemy_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateRegionAsync(Guid id,Model.DTO.AddRegionRequest request)
+        [Authorize(Roles = "writer")]
+        public async Task<IActionResult> UpdateRegionAsync(Guid id, Model.DTO.AddRegionRequest request)
         {
-            var regionFound = await regionRepository.UpdateRegionAsync(id,request);
+            var regionFound = await regionRepository.UpdateRegionAsync(id, request);
 
-            if(regionFound!=null) 
+            if (regionFound != null)
                 return Ok(regionFound);
-            
+
             return BadRequest();
         }
+
+
+        #region Private Methods
+        private bool ValidateAddRegionRequest(Model.DTO.AddRegionRequest region)
+        {
+            {
+
+                if (region == null)
+                {
+                    ModelState.AddModelError(nameof(region), "Enter Data");
+                    return false;
+                }
+                if (string.IsNullOrWhiteSpace(region.Code))
+                {
+                    ModelState.AddModelError(nameof(region.Code), $"{nameof(region.Code)} can't be empty");
+
+                }
+
+                if (string.IsNullOrWhiteSpace(region.Name))
+                {
+                    ModelState.AddModelError(nameof(region.Name), $"{nameof(region.Name)} can't be empty");
+
+                }
+
+                if (region.Area <= 0)
+                {
+                    ModelState.AddModelError(nameof(region.Area), $"Enter valid value for {nameof(region.Area)}");
+
+                }
+
+                if (region.Lat <= 0)
+                {
+                    ModelState.AddModelError(nameof(region.Lat), $"Enter valid value for {nameof(region.Lat)}");
+
+                }
+
+                if (region.Long <= 0)
+                {
+                    ModelState.AddModelError(nameof(region.Long), $"Enter valid value for {nameof(region.Long)}");
+
+                }
+
+                if (region.Population <= 0)
+                {
+                    ModelState.AddModelError(nameof(region.Population), $"Enter valid value for {nameof(region.Population)}");
+
+                }
+
+                if (ModelState.ErrorCount > 0)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+
+        }
+
+
+
+        #endregion
     }
+
 }
 
 
